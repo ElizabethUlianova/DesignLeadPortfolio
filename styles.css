@@ -22,8 +22,8 @@
   --accent: #191829;
   --border: rgba(0, 0, 0, 0.1);
   --font: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --max-width: 1280px;
-  --content-width: 1120px;
+  --max-width: 1080px;
+  --content-width: 920px;
   --side-padding: 80px;
 }
 
@@ -98,7 +98,7 @@ a {
   font-weight: 400;
   line-height: 1.45;
   color: var(--text-muted);
-  max-width: 1120px;
+  max-width: 920px;
 }
 
 .hero-text strong {
