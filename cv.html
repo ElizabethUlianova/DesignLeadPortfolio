@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CV — Lisa Ulianova</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <style>
+    .cv-page {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 64px var(--side-padding) 120px;
+    }
+    .cv-name {
+      font-size: 36px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .cv-role {
+      font-size: 16px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .cv-contact {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 48px;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .cv-contact a {
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+    .cv-contact a:hover { color: var(--text); }
+    .cv-section {
+      margin-bottom: 48px;
+      padding-top: 36px;
+      border-top: 1px solid var(--border);
+    }
+    .cv-section h2 {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+    .cv-job {
+      margin-bottom: 28px;
+    }
+    .cv-job-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 4px;
+    }
+    .cv-job h3 {
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .cv-job-date {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .cv-job-company {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .cv-job p {
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--text-muted);
+    }
+    .cv-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .cv-skill {
+      font-size: 13px;
+      padding: 4px 12px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      color: var(--text-muted);
+    }
+    .cv-pov {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-muted);
+      max-width: 620px;
+    }
+    .cv-download {
+      display: inline-block;
+      margin-top: 32px;
+      font-size: 13px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 2px;
+      color: var(--text-muted);
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .cv-download:hover {
+      color: var(--text);
+      border-color: var(--text);
+    }
+  </style>
+</head>
+<body class="case-page">
+
+  <header>
+    <div class="case-header">
+      <a href="index.html" class="back-link">back</a>
+      <nav class="site-nav" style="padding:0;">
+        <a href="mailto:elizabethulianova@gmail.com">email</a>
+        <a href="https://linkedin.com/in/elizabethulianova" target="_blank" rel="noopener">linkedin</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="cv-page">
+
+    <h1 class="cv-name">Elizaveta Ulianova</h1>
+    <p class="cv-role">Product Design Lead / Principal Product Designer</p>
+    <div class="cv-contact">
+      <a href="mailto:elizabethulianova@gmail.com">elizabethulianova@gmail.com</a>
+      <a href="https://linkedin.com/in/elizabethulianova" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+
+    <div class="cv-section">
+      <h2>My point of view</h2>
+      <p class="cv-pov">I believe great design happens at the intersection of user insight, business clarity, and engineering collaboration. I build teams that ship with confidence, processes that reduce waste, and products that people actually use. I care about quality and I care about speed — and I know how to have both.</p>
+    </div>
+
+    <div class="cv-section">
+      <h2>Work experience</h2>
+
+      <div class="cv-job">
+        <div class="cv-job-header">
+          <h3>Product Design Lead / Principal Product Designer</h3>
+          <span class="cv-job-date">2022 — 2024</span>
+        </div>
+        <p class="cv-job-company">Megamarket</p>
+        <p>Led a 12-person design team through a full product redesign. Defined team structure, rituals, and quality standards. Shipped a new design system and reduced time-to-production by 60%.</p>
+      </div>
+
+      <div class="cv-job">
+        <div class="cv-job-header">
+          <h3>Product Design Lead / Principal Product Designer</h3>
+          <span class="cv-job-date">2020 — 2022</span>
+        </div>
+        <p class="cv-job-company">Avito</p>
+        <p>Led design for the auto vertical. Managed 4 designers across multiple squads. Redesigned the listing page and filter experience, driving an 11% increase in contact rate.</p>
+      </div>
+
+      <div class="cv-job">
+        <div class="cv-job-header">
+          <h3>Senior Product Designer</h3>
+          <span class="cv-job-date">2018 — 2020</span>
+        </div>
+        <p class="cv-job-company">VIJU</p>
+        <p>Designed the streaming service and its CMS from scratch across 4 platforms. Built the design system. Shipped MVP on schedule.</p>
+      </div>
+
+      <div class="cv-job">
+        <div class="cv-job-header">
+          <h3>Senior Product Designer</h3>
+          <span class="cv-job-date">2017 — 2018</span>
+        </div>
+        <p class="cv-job-company">Brag House</p>
+        <p>Designed MVP of the esports social app in 8 weeks. Product contributed to raising $6.7M in investment.</p>
+      </div>
+
+      <div class="cv-job">
+        <div class="cv-job-header">
+          <h3>Senior Product Designer</h3>
+          <span class="cv-job-date">2016 — 2017</span>
+        </div>
+        <p class="cv-job-company">Sbermarket</p>
+        <p>Designed internal communication platform for 10,000 employees. Achieved 85% voluntary adoption in 3 months.</p>
+      </div>
+    </div>
+
+    <div class="cv-section">
+      <h2>Skills</h2>
+      <div class="cv-skills">
+        <span class="cv-skill">Product design</span>
+        <span class="cv-skill">Design leadership</span>
+        <span class="cv-skill">Design systems</span>
+        <span class="cv-skill">User research</span>
+        <span class="cv-skill">Figma</span>
+        <span class="cv-skill">Prototyping</span>
+        <span class="cv-skill">Stakeholder management</span>
+        <span class="cv-skill">Agile / Scrum</span>
+        <span class="cv-skill">B2C</span>
+        <span class="cv-skill">E-commerce</span>
+        <span class="cv-skill">Mobile (iOS &amp; Android)</span>
+        <span class="cv-skill">Web</span>
+        <span class="cv-skill">Smart TV</span>
+        <span class="cv-skill">Mentoring</span>
+      </div>
+    </div>
+
+    <div class="cv-section">
+      <h2>Education</h2>
+      <div class="cv-job">
+        <div class="cv-job-header">
+          <h3>Bachelor of Design</h3>
+          <span class="cv-job-date">2012 — 2016</span>
+        </div>
+        <p class="cv-job-company">Higher School of Economics, Moscow</p>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="site-footer">
+      <a href="mailto:elizabethulianova@gmail.com">elizabethulianova@gmail.com</a>
+      <a href="https://linkedin.com/in/elizabethulianova" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="index.html">← Portfolio</a>
+    </div>
+  </footer>
+
+</body>
+</html>
