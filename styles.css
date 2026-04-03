@@ -49,16 +49,17 @@ a {
 /* ---- Navigation ---- */
 .site-nav {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
-  gap: 48px;
+  gap: 0;
   padding: 32px var(--side-padding);
   max-width: var(--max-width);
   margin: 0 auto;
+  width: 100%;
 }
 
 .site-nav a {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 400;
   color: var(--text);
   letter-spacing: 0.01em;
@@ -72,7 +73,7 @@ a {
 .lang-group {
   display: flex;
   gap: 6px;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .lang-group a {
@@ -140,7 +141,7 @@ a {
 }
 
 .approach-item h4 {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   margin-bottom: 6px;
   color: var(--text);
@@ -214,7 +215,7 @@ a {
 }
 
 .case-desc {
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.6;
   color: var(--cases-muted);
   max-width: 360px;
@@ -358,7 +359,7 @@ a {
 }
 
 .case-item h4 {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   margin-bottom: 6px;
 }
@@ -382,7 +383,7 @@ a {
 }
 
 .case-section p {
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.7;
   color: var(--text-muted);
   max-width: 680px;
@@ -466,4 +467,28 @@ a {
   .hero-text {
     font-size: 19px;
   }
+}
+
+/* ---- Toast notification ---- */
+.toast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  background: #000000;
+  color: #ffffff;
+  padding: 10px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: var(--font);
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s;
+  pointer-events: none;
+  z-index: 9999;
+  white-space: nowrap;
+}
+
+.toast--visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }

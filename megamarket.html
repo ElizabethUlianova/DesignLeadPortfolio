@@ -13,9 +13,9 @@
   <header>
     <div class="case-header">
       <a href="index.html" class="back-link">back</a>
-      <nav class="site-nav" style="padding:0;">
-        <a href="mailto:elizabethulianova@gmail.com">email</a>
-        <a href="https://linkedin.com/in/elizabethulianova" target="_blank" rel="noopener">linkedin</a>
+      <nav class="site-nav" style="padding:0;justify-content:flex-end;gap:48px;width:auto;">
+        <a href="#" onclick="copyEmail(event)">email</a>
+        <a href="https://www.linkedin.com/in/lisaulianova/" target="_blank" rel="noopener">linkedin</a>
       </nav>
     </div>
   </header>
@@ -122,10 +122,26 @@
   <footer>
     <div class="site-footer">
       <a href="mailto:elizabethulianova@gmail.com">elizabethulianova@gmail.com</a>
-      <a href="https://linkedin.com/in/elizabethulianova" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://www.linkedin.com/in/lisaulianova/" target="_blank" rel="noopener">LinkedIn</a>
       <a href="index.html">← All cases</a>
     </div>
   </footer>
 
+  <script>
+    function copyEmail(e) {
+      e.preventDefault();
+      navigator.clipboard.writeText('elizabethulianova@gmail.com').then(function () {
+        var toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = 'email copied';
+        document.body.appendChild(toast);
+        setTimeout(function () { toast.classList.add('toast--visible'); }, 10);
+        setTimeout(function () {
+          toast.classList.remove('toast--visible');
+          setTimeout(function () { toast.remove(); }, 300);
+        }, 2200);
+      });
+    }
+  </script>
 </body>
 </html>
