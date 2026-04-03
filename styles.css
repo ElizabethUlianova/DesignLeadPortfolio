@@ -95,21 +95,21 @@ a {
 
 .hero-text {
   font-size: clamp(24px, 3vw, 36px);
-  font-weight: 400;
+  font-weight: 700;
   line-height: 1.45;
   color: var(--text-muted);
   max-width: 920px;
 }
 
 .hero-text strong {
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text);
 }
 
 /* ---- Section titles ---- */
 .section-title {
-  font-size: 20px;
-  font-weight: 500;
+  font-size: 24px;
+  font-weight: 700;
   letter-spacing: -0.01em;
   margin-bottom: 48px;
   color: var(--text);
@@ -130,8 +130,8 @@ a {
 }
 
 .approach-column h3 {
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 20px;
+  font-weight: 700;
   margin-bottom: 36px;
   letter-spacing: 0.01em;
 }
@@ -142,13 +142,13 @@ a {
 
 .approach-item h4 {
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 400;
   margin-bottom: 6px;
   color: var(--text);
 }
 
 .approach-item p {
-  font-size: 13px;
+  font-size: 16px;
   line-height: 1.6;
   color: var(--text-muted);
 }
