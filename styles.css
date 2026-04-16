@@ -156,37 +156,46 @@ a {
 /* ---- My Cases ---- */
 .cases-section {
   background: var(--cases-bg);
-  padding: 80px var(--side-padding);
+  padding: 80px 0;
 }
 
 .cases-section .section-title {
   color: var(--cases-text);
   max-width: var(--max-width);
   margin: 0 auto 48px;
+  padding: 0 var(--side-padding);
 }
 
 .cases-grid {
-  max-width: var(--max-width);
-  margin: 0 auto;
   display: grid;
   gap: 2px;
 }
 
-/* First two cases — full width dark cards with image */
+/* Full-width background-image cards (Megamarket, Avito) */
 .case-card {
-  background: #111111;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-  padding: 64px;
-  gap: 40px;
+  background: #111111 center / cover no-repeat;
+  display: flex;
+  align-items: flex-end;
+  padding: 80px var(--side-padding);
   cursor: pointer;
-  transition: background 0.2s;
   text-decoration: none;
+  min-height: 520px;
+  position: relative;
+  overflow: hidden;
 }
 
-.case-card:hover {
-  background: #1a1a1a;
+/* Dark gradient overlay for text readability */
+.case-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(0,0,0,0.82) 30%, rgba(0,0,0,0.35) 100%);
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.case-card:hover::after {
+  opacity: 0.85;
 }
 
 .case-card.case-card--full {
@@ -195,6 +204,14 @@ a {
 
 .case-card-content {
   color: var(--cases-text);
+  position: relative;
+  z-index: 1;
+  max-width: 480px;
+}
+
+/* Hide image block — image is now a CSS background */
+.case-card-image {
+  display: none;
 }
 
 .case-tag {
@@ -236,25 +253,14 @@ a {
   border-color: rgba(255,255,255,0.6);
 }
 
-.case-card-image {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  height: 320px;
-}
-
-.case-card-image img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-}
-
 /* Small case cards grid */
 .cases-small-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2px;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--side-padding);
 }
 
 .case-card-small {
@@ -427,17 +433,14 @@ a {
   }
 
   .case-card {
-    grid-template-columns: 1fr;
-    padding: 40px 32px;
-  }
-
-  .case-card-image {
-    height: 220px;
-    order: -1;
+    min-height: 360px;
+    padding: 48px var(--side-padding);
+    align-items: flex-end;
   }
 
   .cases-small-grid {
     grid-template-columns: 1fr;
+    padding: 0 var(--side-padding);
   }
 
   .case-card-small {
