@@ -4,15 +4,207 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lisa Ulianova — Product Design Lead</title>
-  <meta name="description" content="Portfolio von Lisa Ulianova — Product Design Lead und Individual Contributor mit 6+ Jahren Erfahrung in B2C und E-Commerce" />
+  <meta name="description" content="Portfolio von Lisa Ulianova — Product Design Lead und Individual Contributor mit 6+ Jahren Erfahrung in B2C und E-Commerce." />
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <style>
+    /* ── Scroll-snap layout (index only) ──────────────────── */
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .site-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: var(--bg);
+    }
+
+    .page-scroll {
+      height: 100vh;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      scroll-snap-type: y mandatory;
+    }
+
+    .snap-hero {
+      height: 100vh;
+      scroll-snap-align: start;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+    .snap-hero .hero {
+      padding-top: 80px;
+      padding-bottom: 0;
+      margin: 0 auto;
+    }
+
+    .approach-section {
+      height: 100vh !important;
+      max-width: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      scroll-snap-align: start;
+      overflow: hidden;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .approach-inner {
+      padding: 80px var(--side-padding) 60px;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .h-scroll-track {
+      height: 100vh;
+      scroll-snap-align: start;
+      display: flex;
+      overflow-x: scroll;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .h-scroll-track::-webkit-scrollbar { display: none; }
+
+    .h-panel {
+      flex: 0 0 100vw;
+      height: 100vh;
+      scroll-snap-align: start;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .case-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      width: 100%;
+      height: 100%;
+      background: #111 center / cover no-repeat;
+      padding: 80px var(--side-padding);
+      text-decoration: none;
+      position: relative;
+      cursor: pointer;
+    }
+    .case-panel::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, rgba(0,0,0,0.82) 30%, rgba(0,0,0,0.28) 100%);
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .case-panel:hover::after { opacity: 0.75; }
+    .case-panel .case-card-content {
+      position: relative;
+      z-index: 1;
+      max-width: 520px;
+    }
+    .case-panel:hover .case-more {
+      color: #fff;
+      border-color: rgba(255,255,255,0.6);
+    }
+
+    .cases-panel-label {
+      position: absolute;
+      top: calc(80px + 28px);
+      left: var(--side-padding);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.38);
+      z-index: 2;
+      font-family: var(--font);
+    }
+
+    .small-cases-panel {
+      height: 100vh;
+      background: var(--cases-bg);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 var(--side-padding);
+      box-sizing: border-box;
+    }
+    .small-cases-panel .section-title {
+      color: var(--cases-text);
+      padding-top: 80px;
+    }
+    .small-cases-panel .cases-small-grid {
+      max-width: none;
+      margin: 0;
+      padding: 0;
+    }
+    .small-cases-panel .case-card-small {
+      padding: 36px 40px;
+    }
+    .small-cases-panel .site-footer {
+      margin-top: auto;
+      padding: 28px 0;
+      max-width: none;
+      margin-left: 0;
+      margin-right: 0;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .small-cases-panel .site-footer a { color: rgba(255,255,255,0.38); }
+    .small-cases-panel .site-footer a:hover { color: #fff; }
+
+    .scroll-dots {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 200;
+      opacity: 0;
+      transition: opacity 0.35s;
+      pointer-events: none;
+    }
+    .scroll-dots.visible { opacity: 1; }
+    .scroll-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.28);
+      transition: background 0.25s, transform 0.25s;
+    }
+    .scroll-dot.active { background: #fff; transform: scale(1.4); }
+
+    .h-scroll-hint {
+      position: absolute;
+      right: var(--side-padding);
+      bottom: 84px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.38);
+      z-index: 2;
+      font-family: var(--font);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: hint-pulse 2s ease-in-out infinite;
+    }
+    @keyframes hint-pulse {
+      0%, 100% { opacity: 0.38; transform: translateX(0); }
+      50%       { opacity: 0.7;  transform: translateX(6px); }
+    }
+    .h-panel.interacted .h-scroll-hint { display: none; }
+  </style>
 </head>
 <body>
 
-  <!-- Navigation -->
-  <header>
+  <!-- Fixed Navigation -->
+  <header class="site-header">
     <nav class="site-nav">
       <a href="cv.html">cv</a>
       <a href="#" onclick="copyEmail(event)">email</a>
@@ -24,144 +216,152 @@
     </nav>
   </header>
 
-  <!-- Hero -->
-  <section class="hero">
-    <p class="hero-text">
-      Mein Name ist <strong>Lisa</strong> und ich bin eine <strong>Product Design Lead</strong> und starke
-      <strong>Individual Contributor</strong> mit <strong>6+ Jahren</strong>
-      Erfahrung in <strong>B2C</strong> und <strong>E-Commerce.</strong>
-    </p>
-  </section>
+  <div class="scroll-dots" id="scrollDots">
+    <div class="scroll-dot active" data-idx="0"></div>
+    <div class="scroll-dot" data-idx="1"></div>
+    <div class="scroll-dot" data-idx="2"></div>
+  </div>
 
-  <!-- My Approach -->
-  <section class="approach-section">
-    <h2 class="section-title">Mein Ansatz</h2>
+  <div class="page-scroll" id="pageScroll">
 
-    <div class="approach-columns">
+    <!-- Block 1: Hero -->
+    <section class="snap-hero">
+      <div class="hero">
+        <p class="hero-text">
+          Mein Name ist <strong>Lisa</strong> und ich bin eine <strong>Product Design Lead</strong> und starke
+          <strong>Individual Contributor</strong> mit <strong>6+ Jahren</strong>
+          Erfahrung in <strong>B2C</strong> und <strong>E-Commerce.</strong>
+        </p>
+      </div>
+    </section>
 
-      <!-- People Management -->
-      <div class="approach-column">
-        <h3>People Management&nbsp;👥</h3>
+    <!-- Block 2: Mein Ansatz -->
+    <section class="approach-section">
+      <div class="approach-inner">
+        <h2 class="section-title">Mein Ansatz</h2>
+        <div class="approach-columns">
 
-        <div class="approach-item">
-          <h4>Ich entwickle Menschen mit Absicht</h4>
-          <p>Ich erkenne kleine Fortschritte früh und bestätige sie mit gezieltem Feedback, damit Fähigkeiten schnell wachsen und die Motivation hoch bleibt.</p>
-        </div>
+          <div class="approach-column">
+            <h3>People Management&nbsp;👥</h3>
+            <div class="approach-item">
+              <h4>Ich entwickle Menschen mit Absicht</h4>
+              <p>Ich erkenne kleine Fortschritte früh und bestätige sie mit gezieltem Feedback, damit Fähigkeiten schnell wachsen und die Motivation hoch bleibt.</p>
+            </div>
+            <div class="approach-item">
+              <h4>Ich besetze das Team nach Stärken</h4>
+              <p>Ich passe Verantwortung, Coaching und Rituale an den Stil jedes Designers an — und verbinde Menschen, deren Stärken sich ergänzen.</p>
+            </div>
+            <div class="approach-item">
+              <h4>Ich setze hohe Maßstäbe und mache sie erreichbar</h4>
+              <p>Wir definieren Qualitätskriterien im Voraus und iterieren mit fokussierter Kritik — mit dem Anspruch auf Exzellenz, nicht auf „gut genug".</p>
+            </div>
+            <div class="approach-item">
+              <h4>Erst Vertrauen, dann Tempo</h4>
+              <p>Ich investiere in ehrliche, ego-freie Zusammenarbeit — das reduziert Reibung und erleichtert schwierige Produktentscheidungen.</p>
+            </div>
+          </div>
 
-        <div class="approach-item">
-          <h4>Ich besetze das Team nach Stärken</h4>
-          <p>Ich passe Verantwortung, Coaching und Rituale an den Stil jedes Designers an — und verbinde Menschen, deren Stärken sich ergänzen.</p>
-        </div>
+          <div class="approach-column">
+            <h3>Designprozesse&nbsp;🔧</h3>
+            <div class="approach-item">
+              <h4>Ich baue Prozesse, die den Durchsatz erhöhen</h4>
+              <p>Klarer Intake, Priorisierung und Definition of Done — damit Designer ihre Zeit für Wirkung nutzen, nicht für Chaos.</p>
+            </div>
+            <div class="approach-item">
+              <h4>Ich führe einen sauberen End-to-End-Loop</h4>
+              <p>Discovery → Konzept → Validierung → Lieferung → Messung, mit klaren Übergaben und Checklisten, die mit agilen Teams funktionieren.</p>
+            </div>
+            <div class="approach-item">
+              <h4>Ich standardisiere, was standardisiert werden sollte</h4>
+              <p>Design-System-Nutzung, Muster, Komponentenbibliotheken und QA-Routinen — damit wir konsistente UI liefern und Nacharbeit reduzieren.</p>
+            </div>
+            <div class="approach-item">
+              <h4>Ich balanciere Tempo und Risiko mit Optionen</h4>
+              <p>Bei hoher Unsicherheit setze ich auf schnelle Prototypen und Experimente — bei niedriger auf entschlossene Ausführung.</p>
+            </div>
+          </div>
 
-        <div class="approach-item">
-          <h4>Ich setze hohe Maßstäbe und mache sie erreichbar</h4>
-          <p>Wir definieren Qualitätskriterien im Voraus und iterieren mit fokussierter Kritik — mit dem Anspruch auf Exzellenz, nicht auf „gut genug".</p>
-        </div>
-
-        <div class="approach-item">
-          <h4>Erst Vertrauen, dann Tempo</h4>
-          <p>Ich investiere in ehrliche, ego-freie Zusammenarbeit — das reduziert Reibung und erleichtert schwierige Produktentscheidungen.</p>
         </div>
       </div>
+    </section>
 
-      <!-- Design Processes -->
-      <div class="approach-column">
-        <h3>Designprozesse&nbsp;🔧</h3>
+    <!-- Blocks 3–5: Horizontal scroll track -->
+    <div class="snap-section h-scroll-track" id="hScrollTrack">
 
-        <div class="approach-item">
-          <h4>Ich baue Prozesse, die den Durchsatz erhöhen</h4>
-          <p>Klarer Intake, Priorisierung und Definition of Done — damit Designer ihre Zeit für Wirkung nutzen, nicht für Chaos.</p>
-        </div>
+      <!-- Block 3: Megamarket -->
+      <div class="h-panel" id="panel-0">
+        <a href="megamarket.html" class="case-panel" style="background-image: url('images/megamarket.png');">
+          <span class="cases-panel-label">Meine Cases</span>
+          <span class="h-scroll-hint">scrollen&nbsp;→</span>
+          <div class="case-card-content">
+            <p class="case-tag">Megamarket</p>
+            <h3 class="case-role">Product Design Lead /<br>Principal Product Designer</h3>
+            <p class="case-desc">Einen Marketplace von Grund auf neu denken und mit einem 12-köpfigen Design-Team zum Leben erwecken.</p>
+            <span class="case-more">Mehr</span>
+          </div>
+        </a>
+      </div>
 
-        <div class="approach-item">
-          <h4>Ich führe einen sauberen End-to-End-Loop</h4>
-          <p>Discovery → Konzept → Validierung → Lieferung → Messung, mit klaren Übergaben und Checklisten, die mit agilen Teams funktionieren.</p>
-        </div>
+      <!-- Block 4: Avito -->
+      <div class="h-panel" id="panel-1">
+        <a href="avito.html" class="case-panel" style="background-image: url('images/avito.png');">
+          <span class="cases-panel-label">Meine Cases</span>
+          <div class="case-card-content">
+            <p class="case-tag">Avito</p>
+            <h3 class="case-role">Product Design Lead /<br>Principal Product Designer</h3>
+            <p class="case-desc">Die User Experience beim Autokauf verbessern.</p>
+            <span class="case-more">Mehr</span>
+          </div>
+        </a>
+      </div>
 
-        <div class="approach-item">
-          <h4>Ich standardisiere, was standardisiert werden sollte</h4>
-          <p>Design-System-Nutzung, Muster, Komponentenbibliotheken und QA-Routinen — damit wir konsistente UI liefern und Nacharbeit reduzieren.</p>
-        </div>
+      <!-- Block 5: Small projects + footer -->
+      <div class="h-panel" id="panel-2">
+        <div class="small-cases-panel">
+          <h2 class="section-title">Meine Cases</h2>
+          <div class="cases-small-grid">
 
-        <div class="approach-item">
-          <h4>Ich balanciere Tempo und Risiko mit Optionen</h4>
-          <p>Bei hoher Unsicherheit setze ich auf schnelle Prototypen und Experimente — bei niedriger auf entschlossene Ausführung.</p>
+            <a href="viju-streaming.html" class="case-card-small">
+              <p class="case-tag">VIJU</p>
+              <h3 class="case-role" style="font-size:17px;font-weight:600;color:#fff;margin-bottom:10px;line-height:1.3;">Senior Product Designer</h3>
+              <p class="case-desc">Einen neuen Streaming-Dienst von Grund auf gestalten.</p>
+              <span class="case-more">Mehr</span>
+            </a>
+
+            <a href="viju-cms.html" class="case-card-small">
+              <p class="case-tag">VIJU</p>
+              <h3 class="case-role" style="font-size:17px;font-weight:600;color:#fff;margin-bottom:10px;line-height:1.3;">Senior Product Designer</h3>
+              <p class="case-desc">Das Content-Management-System des Streaming-Dienstes von Grund auf gestalten.</p>
+              <span class="case-more">Mehr</span>
+            </a>
+
+            <a href="brag-house.html" class="case-card-small">
+              <p class="case-tag">Brag House</p>
+              <h3 class="case-role" style="font-size:17px;font-weight:600;color:#fff;margin-bottom:10px;line-height:1.3;">Senior Product Designer</h3>
+              <p class="case-desc">Das MVP der Esports-App gestalten, um Investitionen anzuziehen — insgesamt $6,7 Mio. wurden eingeworben.</p>
+              <span class="case-more">Mehr</span>
+            </a>
+
+            <a href="sbermarket.html" class="case-card-small">
+              <p class="case-tag">Sbermarket</p>
+              <h3 class="case-role" style="font-size:17px;font-weight:600;color:#fff;margin-bottom:10px;line-height:1.3;">Senior Product Designer</h3>
+              <p class="case-desc">Eine Team-Kommunikationsplattform für 10.000 Mitarbeiter gestalten.</p>
+              <span class="case-more">Mehr</span>
+            </a>
+
+          </div>
+
+          <div class="site-footer">
+            <a href="mailto:elizabethulianova@gmail.com">elizabethulianova@gmail.com</a>
+            <a href="https://www.linkedin.com/in/lisaulianova/" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="cv.html">CV</a>
+          </div>
         </div>
       </div>
 
     </div>
-  </section>
 
-  <!-- My Cases -->
-  <section class="cases-section">
-    <h2 class="section-title">Meine Cases</h2>
-
-    <div class="cases-grid">
-
-      <!-- Megamarket — full-width card -->
-      <a href="megamarket.html" class="case-card case-card--full" style="background-image: url('images/megamarket.png');">
-        <div class="case-card-content">
-          <p class="case-tag">Megamarket</p>
-          <h3 class="case-role">Product Design Lead /<br>Principal Product Designer</h3>
-          <p class="case-desc">Einen Marketplace von Grund auf neu denken und mit einem 12-köpfigen Design-Team zum Leben erwecken.</p>
-          <span class="case-more">Mehr</span>
-        </div>
-      </a>
-
-      <!-- Avito — full-width card -->
-      <a href="avito.html" class="case-card case-card--full" style="background-image: url('images/avito.png');">
-        <div class="case-card-content">
-          <p class="case-tag">Avito</p>
-          <h3 class="case-role">Product Design Lead /<br>Principal Product Designer</h3>
-          <p class="case-desc">Die User Experience beim Autokauf verbessern.</p>
-          <span class="case-more">Mehr</span>
-        </div>
-      </a>
-
-      <!-- Small cases 2×2 grid -->
-      <div class="cases-small-grid">
-
-        <a href="viju-streaming.html" class="case-card-small">
-          <p class="case-tag">VIJU</p>
-          <h3 class="case-role" style="font-size:17px;font-weight:600;color:#fff;margin-bottom:10px;line-height:1.3;">Senior Product Designer</h3>
-          <p class="case-desc">Einen neuen Streaming-Dienst von Grund auf gestalten.</p>
-          <span class="case-more">Mehr</span>
-        </a>
-
-        <a href="viju-cms.html" class="case-card-small">
-          <p class="case-tag">VIJU</p>
-          <h3 class="case-role" style="font-size:17px;font-weight:600;color:#fff;margin-bottom:10px;line-height:1.3;">Senior Product Designer</h3>
-          <p class="case-desc">Das Content-Management-System des Streaming-Dienstes von Grund auf gestalten.</p>
-          <span class="case-more">Mehr</span>
-        </a>
-
-        <a href="brag-house.html" class="case-card-small">
-          <p class="case-tag">Brag House</p>
-          <h3 class="case-role" style="font-size:17px;font-weight:600;color:#fff;margin-bottom:10px;line-height:1.3;">Senior Product Designer</h3>
-          <p class="case-desc">Das MVP der Esports-App gestalten, um Investitionen anzuziehen — insgesamt $6,7 Mio. wurden eingeworben.</p>
-          <span class="case-more">Mehr</span>
-        </a>
-
-        <a href="sbermarket.html" class="case-card-small">
-          <p class="case-tag">Sbermarket</p>
-          <h3 class="case-role" style="font-size:17px;font-weight:600;color:#fff;margin-bottom:10px;line-height:1.3;">Senior Product Designer</h3>
-          <p class="case-desc">Eine Team-Kommunikationsplattform für 10.000 Mitarbeiter gestalten.</p>
-          <span class="case-more">Mehr</span>
-        </a>
-
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer>
-    <div class="site-footer">
-      <a href="mailto:elizabethulianova@gmail.com">elizabethulianova@gmail.com</a>
-      <a href="https://www.linkedin.com/in/lisaulianova/" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="cv.html">CV</a>
-    </div>
-  </footer>
+  </div>
 
   <script>
     function copyEmail(e) {
@@ -171,15 +371,89 @@
         toast.className = 'toast';
         toast.textContent = 'email copied';
         document.body.appendChild(toast);
-        setTimeout(function () {
-          toast.classList.add('toast--visible');
-        }, 10);
+        setTimeout(function () { toast.classList.add('toast--visible'); }, 10);
         setTimeout(function () {
           toast.classList.remove('toast--visible');
           setTimeout(function () { toast.remove(); }, 300);
         }, 2200);
       });
     }
+
+    (function () {
+      var hTrack     = document.getElementById('hScrollTrack');
+      var pageScroll = document.getElementById('pageScroll');
+      var dotsWrap   = document.getElementById('scrollDots');
+      var dots       = Array.from(dotsWrap.querySelectorAll('.scroll-dot'));
+      var firstPanel = document.getElementById('panel-0');
+      var PANEL_W    = window.innerWidth;
+      var PANELS     = hTrack.querySelectorAll('.h-panel').length;
+      var locked     = false;
+      var LOCK_MS    = 750;
+
+      window.addEventListener('resize', function () { PANEL_W = window.innerWidth; });
+
+      function activeIdx() { return Math.round(hTrack.scrollLeft / PANEL_W); }
+
+      function goTo(idx) {
+        hTrack.scrollTo({ left: idx * PANEL_W, behavior: 'smooth' });
+        updateDots(idx);
+        firstPanel.classList.add('interacted');
+      }
+
+      function updateDots(idx) {
+        dots.forEach(function (d, i) { d.classList.toggle('active', i === idx); });
+      }
+
+      var observer = new IntersectionObserver(function (entries) {
+        dotsWrap.classList.toggle('visible', entries[0].isIntersecting);
+      }, { root: pageScroll, threshold: 0.6 });
+      observer.observe(hTrack);
+
+      hTrack.addEventListener('scroll', function () { updateDots(activeIdx()); });
+
+      hTrack.addEventListener('wheel', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (locked) return;
+        locked = true;
+        var delta = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+        var cur = activeIdx();
+        if (delta > 0) {
+          if (cur < PANELS - 1) goTo(cur + 1);
+        } else {
+          if (cur > 0) goTo(cur - 1);
+          else pageScroll.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
+        }
+        setTimeout(function () { locked = false; }, LOCK_MS);
+      }, { passive: false });
+
+      document.addEventListener('keydown', function (e) {
+        if (!dotsWrap.classList.contains('visible')) return;
+        var cur = activeIdx();
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          if (cur < PANELS - 1) goTo(cur + 1);
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          if (cur > 0) goTo(cur - 1);
+          else pageScroll.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
+        }
+      });
+
+      var tx0 = 0, ty0 = 0;
+      hTrack.addEventListener('touchstart', function (e) {
+        tx0 = e.touches[0].clientX; ty0 = e.touches[0].clientY;
+      }, { passive: true });
+      hTrack.addEventListener('touchend', function (e) {
+        var dx = tx0 - e.changedTouches[0].clientX;
+        var dy = ty0 - e.changedTouches[0].clientY;
+        if (Math.abs(dx) <= Math.abs(dy) || Math.abs(dx) < 40) return;
+        var cur = activeIdx();
+        if (dx > 0 && cur < PANELS - 1) goTo(cur + 1);
+        else if (dx < 0 && cur > 0) goTo(cur - 1);
+        else if (dx < 0 && cur === 0) pageScroll.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
+      }, { passive: true });
+    }());
   </script>
 </body>
 </html>

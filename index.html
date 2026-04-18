@@ -4,15 +4,225 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lisa Ulianova — Product Design Lead</title>
-  <meta name="description" content="Portfolio of Lisa Ulianova — Product Design Lead and Individual Contributor with 6+ years of experience in B2C and e-commerce" />
+  <meta name="description" content="Portfolio of Lisa Ulianova — Product Design Lead and Individual Contributor with 6+ years of experience in B2C and e-commerce." />
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <style>
+    /* ── Scroll-snap layout (index only) ──────────────────── */
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    /* Fixed navigation */
+    .site-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: var(--bg);
+    }
+
+    /* Main vertical scroll container */
+    .page-scroll {
+      height: 100vh;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      scroll-snap-type: y mandatory;
+    }
+
+    /* ── Snap block 1: Hero ───────────────────────────────── */
+    .snap-hero {
+      height: 100vh;
+      scroll-snap-align: start;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+    .snap-hero .hero {
+      padding-top: 80px; /* clear fixed header */
+      padding-bottom: 0;
+      margin: 0 auto;
+    }
+
+    /* ── Snap block 2: Approach ───────────────────────────── */
+    .approach-section {
+      height: 100vh !important;
+      max-width: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      scroll-snap-align: start;
+      overflow: hidden;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .approach-inner {
+      padding: 80px var(--side-padding) 60px; /* 80px = header height */
+      max-width: var(--max-width);
+      margin: 0 auto;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* ── Horizontal scroll track (blocks 3–5) ─────────────── */
+    .h-scroll-track {
+      height: 100vh;
+      scroll-snap-align: start;
+      display: flex;
+      overflow-x: scroll;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .h-scroll-track::-webkit-scrollbar { display: none; }
+
+    /* Individual horizontal panels */
+    .h-panel {
+      flex: 0 0 100vw;
+      height: 100vh;
+      scroll-snap-align: start;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Full-screen case panel (blocks 3 & 4) */
+    .case-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      width: 100%;
+      height: 100%;
+      background: #111 center / cover no-repeat;
+      padding: 80px var(--side-padding);
+      text-decoration: none;
+      position: relative;
+      cursor: pointer;
+      transition: none;
+    }
+    .case-panel::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, rgba(0,0,0,0.82) 30%, rgba(0,0,0,0.28) 100%);
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .case-panel:hover::after { opacity: 0.75; }
+    .case-panel .case-card-content {
+      position: relative;
+      z-index: 1;
+      max-width: 520px;
+    }
+    .case-panel:hover .case-more {
+      color: #fff;
+      border-color: rgba(255,255,255,0.6);
+    }
+
+    /* "My cases" label inside each case panel */
+    .cases-panel-label {
+      position: absolute;
+      top: calc(80px + 28px);
+      left: var(--side-padding);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.38);
+      z-index: 2;
+      font-family: var(--font);
+    }
+
+    /* ── Block 5: Small cases panel ──────────────────────── */
+    .small-cases-panel {
+      height: 100vh;
+      background: var(--cases-bg);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 var(--side-padding) 0;
+      box-sizing: border-box;
+    }
+    .small-cases-panel .section-title {
+      color: var(--cases-text);
+      padding-top: 80px; /* header clearance */
+    }
+    .small-cases-panel .cases-small-grid {
+      max-width: none;
+      margin: 0;
+      padding: 0;
+    }
+    .small-cases-panel .case-card-small {
+      padding: 36px 40px;
+    }
+    .small-cases-panel .site-footer {
+      margin-top: auto;
+      padding: 28px 0;
+      max-width: none;
+      margin-left: 0;
+      margin-right: 0;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .small-cases-panel .site-footer a {
+      color: rgba(255,255,255,0.38);
+    }
+    .small-cases-panel .site-footer a:hover { color: #fff; }
+
+    /* ── Scroll-position dots ─────────────────────────────── */
+    .scroll-dots {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 200;
+      opacity: 0;
+      transition: opacity 0.35s;
+      pointer-events: none;
+    }
+    .scroll-dots.visible { opacity: 1; }
+    .scroll-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.28);
+      transition: background 0.25s, transform 0.25s;
+    }
+    .scroll-dot.active {
+      background: #ffffff;
+      transform: scale(1.4);
+    }
+
+    /* ── Horizontal scroll hint arrow ────────────────────── */
+    .h-scroll-hint {
+      position: absolute;
+      right: var(--side-padding);
+      bottom: 84px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.38);
+      z-index: 2;
+      font-family: var(--font);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: hint-pulse 2s ease-in-out infinite;
+    }
+    @keyframes hint-pulse {
+      0%, 100% { opacity: 0.38; transform: translateX(0); }
+      50%       { opacity: 0.7;  transform: translateX(6px); }
+    }
+    /* Hide hint after first interaction */
+    .h-panel.interacted .h-scroll-hint { display: none; }
+  </style>
 </head>
 <body>
 
-  <!-- Navigation -->
-  <header>
+  <!-- Fixed Navigation -->
+  <header class="site-header">
     <nav class="site-nav">
       <a href="cv.html">cv</a>
       <a href="#" onclick="copyEmail(event)">email</a>
@@ -24,146 +234,159 @@
     </nav>
   </header>
 
-  <!-- Hero -->
-  <section class="hero">
-    <p class="hero-text">
-      My name is <strong>Lisa</strong> and I'm a <strong>Product Design Lead</strong> and a
-      strong <strong>Individual Contributor</strong> with <strong>6+ years</strong>
-      of experience in <strong>B2C</strong> and <strong>e-commerce</strong>
-    </p>
-  </section>
+  <!-- Horizontal position dots (visible only over cases) -->
+  <div class="scroll-dots" id="scrollDots">
+    <div class="scroll-dot active" data-idx="0"></div>
+    <div class="scroll-dot" data-idx="1"></div>
+    <div class="scroll-dot" data-idx="2"></div>
+  </div>
 
-  <!-- My Approach -->
-  <section class="approach-section">
-    <h2 class="section-title">My approach</h2>
+  <!-- ─── Main scroll container ─────────────────────────── -->
+  <div class="page-scroll" id="pageScroll">
 
-    <div class="approach-columns">
+    <!-- ── Block 1: Hero ──────────────────────────────── -->
+    <section class="snap-hero">
+      <div class="hero">
+        <p class="hero-text">
+          My name is <strong>Lisa</strong> and I'm a <strong>Product Design Lead</strong> and a
+          strong <strong>Individual Contributor</strong> with <strong>6+ years</strong>
+          of experience in <strong>B2C</strong> and <strong>e-commerce.</strong>
+        </p>
+      </div>
+    </section>
 
-      <!-- People Management -->
-      <div class="approach-column">
-        <h3>People Management&nbsp;👥</h3>
+    <!-- ── Block 2: My Approach ───────────────────────── -->
+    <section class="approach-section">
+      <div class="approach-inner">
+        <h2 class="section-title">My approach</h2>
+        <div class="approach-columns">
 
-        <div class="approach-item">
-          <h4>I grow people on purpose</h4>
-          <p>I notice small progress early and reinforce it with specific feedback, so skills compound fast and confidence stays high.</p>
+          <!-- People Management -->
+          <div class="approach-column">
+            <h3>People Management&nbsp;👥</h3>
+            <div class="approach-item">
+              <h4>I grow people on purpose</h4>
+              <p>I notice small progress early and reinforce it with specific feedback, so skills compound fast and confidence stays high.</p>
+            </div>
+            <div class="approach-item">
+              <h4>I "cast" the team by strengths</h4>
+              <p>I tailor ownership, coaching, and rituals to each designer's style — and pair people so strengths complement each other.</p>
+            </div>
+            <div class="approach-item">
+              <h4>I set a high bar and make it achievable</h4>
+              <p>We define quality criteria up front and iterate with focused critique — aiming for excellence, not "good enough."</p>
+            </div>
+            <div class="approach-item">
+              <h4>I build trust first, then speed</h4>
+              <p>I invest in honest, low-ego collaboration — it reduces friction and makes hard product calls easier.</p>
+            </div>
+          </div>
+
+          <!-- Design Processes -->
+          <div class="approach-column">
+            <h3>Design processes&nbsp;🔧</h3>
+            <div class="approach-item">
+              <h4>I build processes that increase throughput</h4>
+              <p>Clear intake, prioritization, and definition of done — so designers spend time on impact, not chaos.</p>
+            </div>
+            <div class="approach-item">
+              <h4>I run a clean end-to-end loop</h4>
+              <p>Discovery → concept → validation → delivery → measurement, with explicit handoffs and checklists that work with agile teams.</p>
+            </div>
+            <div class="approach-item">
+              <h4>I standardize what should be standard</h4>
+              <p>Design system usage, patterns, component libraries, and QA routines — so we ship consistent UI and reduce rework.</p>
+            </div>
+            <div class="approach-item">
+              <h4>I balance speed and risk with options</h4>
+              <p>I push for fast prototypes and experiments when uncertainty is high, and decisive execution when it's low.</p>
+            </div>
+          </div>
+
         </div>
+      </div>
+    </section>
 
-        <div class="approach-item">
-          <h4>I "cast" the team by strengths</h4>
-          <p>I tailor ownership, coaching, and rituals to each designer's style — and pair people so strengths complement each other.</p>
-        </div>
+    <!-- ── Blocks 3–5: Horizontal scroll track ────────── -->
+    <div class="snap-section h-scroll-track" id="hScrollTrack">
 
-        <div class="approach-item">
-          <h4>I set a high bar and make it achievable</h4>
-          <p>We define quality criteria up front and iterate with focused critique — aiming for excellence, not "good enough."</p>
-        </div>
+      <!-- Block 3: Megamarket -->
+      <div class="h-panel" id="panel-0">
+        <a href="megamarket.html" class="case-panel" style="background-image: url('images/megamarket.png');">
+          <span class="cases-panel-label">My cases</span>
+          <span class="h-scroll-hint">scroll&nbsp;→</span>
+          <div class="case-card-content">
+            <p class="case-tag">Megamarket</p>
+            <h3 class="case-role">Product Design Lead /<br>Principal Product Designer</h3>
+            <p class="case-desc">Rethinking a marketplace from scratch and bringing it to life with a 12-person design team.</p>
+            <span class="case-more">More</span>
+          </div>
+        </a>
+      </div>
 
-        <div class="approach-item">
-          <h4>I build trust first, then speed</h4>
-          <p>I invest in honest, low-ego collaboration — it reduces friction and makes hard product calls easier.</p>
+      <!-- Block 4: Avito -->
+      <div class="h-panel" id="panel-1">
+        <a href="avito.html" class="case-panel" style="background-image: url('images/avito.png');">
+          <span class="cases-panel-label">My cases</span>
+          <div class="case-card-content">
+            <p class="case-tag">Avito</p>
+            <h3 class="case-role">Product Design Lead /<br>Principal Product Designer</h3>
+            <p class="case-desc">Improving the user experience of buying a car.</p>
+            <span class="case-more">More</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Block 5: Small projects + footer -->
+      <div class="h-panel" id="panel-2">
+        <div class="small-cases-panel">
+          <h2 class="section-title">My cases</h2>
+          <div class="cases-small-grid">
+
+            <a href="viju-streaming.html" class="case-card-small">
+              <p class="case-tag">VIJU</p>
+              <h3 class="case-role" style="font-size:17px;font-weight:600;color:#fff;margin-bottom:10px;line-height:1.3;">Senior Product Designer</h3>
+              <p class="case-desc">Designing a new streaming service from scratch.</p>
+              <span class="case-more">More</span>
+            </a>
+
+            <a href="viju-cms.html" class="case-card-small">
+              <p class="case-tag">VIJU</p>
+              <h3 class="case-role" style="font-size:17px;font-weight:600;color:#fff;margin-bottom:10px;line-height:1.3;">Senior Product Designer</h3>
+              <p class="case-desc">Designing the content management system of the streaming service from scratch.</p>
+              <span class="case-more">More</span>
+            </a>
+
+            <a href="brag-house.html" class="case-card-small">
+              <p class="case-tag">Brag House</p>
+              <h3 class="case-role" style="font-size:17px;font-weight:600;color:#fff;margin-bottom:10px;line-height:1.3;">Senior Product Designer</h3>
+              <p class="case-desc">Designing the MVP of the esports app to attract investment, which raised a total of $6.7M.</p>
+              <span class="case-more">More</span>
+            </a>
+
+            <a href="sbermarket.html" class="case-card-small">
+              <p class="case-tag">Sbermarket</p>
+              <h3 class="case-role" style="font-size:17px;font-weight:600;color:#fff;margin-bottom:10px;line-height:1.3;">Senior Product Designer</h3>
+              <p class="case-desc">Designing a team communication platform for 10,000 employees.</p>
+              <span class="case-more">More</span>
+            </a>
+
+          </div>
+
+          <div class="site-footer">
+            <a href="mailto:elizabethulianova@gmail.com">elizabethulianova@gmail.com</a>
+            <a href="https://www.linkedin.com/in/lisaulianova/" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="cv.html">CV</a>
+          </div>
         </div>
       </div>
 
-      <!-- Design Processes -->
-      <div class="approach-column">
-        <h3>Design processes&nbsp;🔧</h3>
+    </div><!-- end h-scroll-track -->
 
-        <div class="approach-item">
-          <h4>I build processes that increase throughput</h4>
-          <p>Clear intake, prioritization, and definition of done — so designers spend time on impact, not chaos.</p>
-        </div>
-
-        <div class="approach-item">
-          <h4>I run a clean end-to-end loop</h4>
-          <p>Discovery → concept → validation → delivery → measurement, with explicit handoffs and checklists that work with agile teams.</p>
-        </div>
-
-        <div class="approach-item">
-          <h4>I standardize what should be standard</h4>
-          <p>Design system usage, patterns, component libraries, and QA routines — so we ship consistent UI and reduce rework.</p>
-        </div>
-
-        <div class="approach-item">
-          <h4>I balance speed and risk with options</h4>
-          <p>I push for fast prototypes and experiments when uncertainty is high, and decisive execution when it's low.</p>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- My Cases -->
-  <section class="cases-section">
-    <h2 class="section-title">My cases</h2>
-
-    <div class="cases-grid">
-
-      <!-- Megamarket — full-width card -->
-      <a href="megamarket.html" class="case-card case-card--full" style="background-image: url('images/megamarket.png');">
-        <div class="case-card-content">
-          <p class="case-tag">Megamarket</p>
-          <h3 class="case-role">Product Design Lead /<br>Principal Product Designer</h3>
-          <p class="case-desc">Rethinking a marketplace from scratch and bringing it to life with a 12-person design team.</p>
-          <span class="case-more">More</span>
-        </div>
-      </a>
-
-      <!-- Avito — full-width card -->
-      <a href="avito.html" class="case-card case-card--full" style="background-image: url('images/avito.png');">
-        <div class="case-card-content">
-          <p class="case-tag">Avito</p>
-          <h3 class="case-role">Product Design Lead /<br>Principal Product Designer</h3>
-          <p class="case-desc">Improving the user experience of buying a car.</p>
-          <span class="case-more">More</span>
-        </div>
-      </a>
-
-      <!-- Small cases 2×2 grid -->
-      <div class="cases-small-grid">
-
-        <a href="viju-streaming.html" class="case-card-small">
-          <p class="case-tag">VIJU</p>
-          <h3 class="case-role" style="font-size:17px;font-weight:600;color:#fff;margin-bottom:10px;line-height:1.3;">Senior Product Designer</h3>
-          <p class="case-desc">Designing a new streaming service from scratch.</p>
-          <span class="case-more">More</span>
-        </a>
-
-        <a href="viju-cms.html" class="case-card-small">
-          <p class="case-tag">VIJU</p>
-          <h3 class="case-role" style="font-size:17px;font-weight:600;color:#fff;margin-bottom:10px;line-height:1.3;">Senior Product Designer</h3>
-          <p class="case-desc">Designing the content management system of the streaming service from scratch.</p>
-          <span class="case-more">More</span>
-        </a>
-
-        <a href="brag-house.html" class="case-card-small">
-          <p class="case-tag">Brag House</p>
-          <h3 class="case-role" style="font-size:17px;font-weight:600;color:#fff;margin-bottom:10px;line-height:1.3;">Senior Product Designer</h3>
-          <p class="case-desc">Designing the MVP of the esports app to attract investment, which raised a total of $6.7M.</p>
-          <span class="case-more">More</span>
-        </a>
-
-        <a href="sbermarket.html" class="case-card-small">
-          <p class="case-tag">Sbermarket</p>
-          <h3 class="case-role" style="font-size:17px;font-weight:600;color:#fff;margin-bottom:10px;line-height:1.3;">Senior Product Designer</h3>
-          <p class="case-desc">Designing a team communication platform for 10'000 employees.</p>
-          <span class="case-more">More</span>
-        </a>
-
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer>
-    <div class="site-footer">
-      <a href="mailto:elizabethulianova@gmail.com">elizabethulianova@gmail.com</a>
-      <a href="https://linkedin.com/in/elizabethulianova" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="cv.html">CV</a>
-    </div>
-  </footer>
+  </div><!-- end page-scroll -->
 
   <script>
+    /* ── Email copy ─────────────────────────────────────── */
     function copyEmail(e) {
       e.preventDefault();
       navigator.clipboard.writeText('elizabethulianova@gmail.com').then(function () {
@@ -171,15 +394,124 @@
         toast.className = 'toast';
         toast.textContent = 'email copied';
         document.body.appendChild(toast);
-        setTimeout(function () {
-          toast.classList.add('toast--visible');
-        }, 10);
+        setTimeout(function () { toast.classList.add('toast--visible'); }, 10);
         setTimeout(function () {
           toast.classList.remove('toast--visible');
           setTimeout(function () { toast.remove(); }, 300);
         }, 2200);
       });
     }
+
+    /* ── Scroll snap logic ──────────────────────────────── */
+    (function () {
+      var hTrack     = document.getElementById('hScrollTrack');
+      var pageScroll = document.getElementById('pageScroll');
+      var dotsWrap   = document.getElementById('scrollDots');
+      var dots       = Array.from(dotsWrap.querySelectorAll('.scroll-dot'));
+      var firstPanel = document.getElementById('panel-0');
+      var PANEL_W    = window.innerWidth;
+      var PANELS     = hTrack.querySelectorAll('.h-panel').length;
+      var locked     = false;
+      var LOCK_MS    = 750;
+
+      /* Resize: recalculate panel width */
+      window.addEventListener('resize', function () { PANEL_W = window.innerWidth; });
+
+      /* Current panel index */
+      function activeIdx() {
+        return Math.round(hTrack.scrollLeft / PANEL_W);
+      }
+
+      /* Scroll to a panel index */
+      function goTo(idx) {
+        hTrack.scrollTo({ left: idx * PANEL_W, behavior: 'smooth' });
+        updateDots(idx);
+        /* Hide hint once user has scrolled */
+        firstPanel.classList.add('interacted');
+      }
+
+      /* Sync dots */
+      function updateDots(idx) {
+        dots.forEach(function (d, i) {
+          d.classList.toggle('active', i === idx);
+        });
+      }
+
+      /* Show/hide dots when entering/leaving horizontal track */
+      var observer = new IntersectionObserver(function (entries) {
+        dotsWrap.classList.toggle('visible', entries[0].isIntersecting);
+      }, { root: pageScroll, threshold: 0.6 });
+      observer.observe(hTrack);
+
+      /* Sync dots on native horizontal scroll (touch) */
+      hTrack.addEventListener('scroll', function () {
+        updateDots(activeIdx());
+      });
+
+      /* ── Wheel: convert vertical → horizontal ─────────── */
+      hTrack.addEventListener('wheel', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (locked) return;
+        locked = true;
+
+        /* Prefer deltaY (trackpad / mouse wheel), fall back to deltaX */
+        var delta = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+        var cur   = activeIdx();
+
+        if (delta > 0) {
+          /* Scroll right */
+          if (cur < PANELS - 1) {
+            goTo(cur + 1);
+          }
+          /* Already on last panel — do nothing */
+        } else {
+          /* Scroll left / up */
+          if (cur > 0) {
+            goTo(cur - 1);
+          } else {
+            /* Back to vertical — go to approach section */
+            pageScroll.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
+          }
+        }
+
+        setTimeout(function () { locked = false; }, LOCK_MS);
+      }, { passive: false });
+
+      /* ── Keyboard navigation ──────────────────────────── */
+      document.addEventListener('keydown', function (e) {
+        if (!dotsWrap.classList.contains('visible')) return;
+        var cur = activeIdx();
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          if (cur < PANELS - 1) goTo(cur + 1);
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          if (cur > 0) {
+            goTo(cur - 1);
+          } else {
+            pageScroll.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
+          }
+        }
+      });
+
+      /* ── Touch swipe ──────────────────────────────────── */
+      var tx0 = 0, ty0 = 0;
+      hTrack.addEventListener('touchstart', function (e) {
+        tx0 = e.touches[0].clientX;
+        ty0 = e.touches[0].clientY;
+      }, { passive: true });
+      hTrack.addEventListener('touchend', function (e) {
+        var dx = tx0 - e.changedTouches[0].clientX;
+        var dy = ty0 - e.changedTouches[0].clientY;
+        if (Math.abs(dx) <= Math.abs(dy) || Math.abs(dx) < 40) return;
+        var cur = activeIdx();
+        if (dx > 0 && cur < PANELS - 1) goTo(cur + 1);
+        else if (dx < 0 && cur > 0) goTo(cur - 1);
+        else if (dx < 0 && cur === 0) pageScroll.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
+      }, { passive: true });
+
+    }());
   </script>
 </body>
 </html>
