@@ -9,18 +9,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <style>
-    /* ── Scroll-snap layout (index only) ──────────────────── */
-    html, body {
-      height: 100%;
-      overflow: hidden;
-    }
+    html, body { height: 100%; overflow: hidden; }
 
     .site-header {
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 100;
-      background: var(--bg);
+      background: transparent;
     }
+    .site-header.header--dark .site-nav a      { color: #ffffff; }
+    .site-header.header--dark .lang-group a    { color: rgba(255,255,255,0.35); }
+    .site-header.header--dark .lang-group a.active { color: #ffffff; }
 
     .page-scroll {
       height: 100vh;
@@ -36,11 +35,7 @@
       align-items: center;
       overflow: hidden;
     }
-    .snap-hero .hero {
-      padding-top: 80px;
-      padding-bottom: 0;
-      margin: 0 auto;
-    }
+    .snap-hero .hero { padding-top: 80px; padding-bottom: 0; margin: 0 auto; }
 
     .approach-section {
       height: 100vh !important;
@@ -68,7 +63,6 @@
       display: flex;
       overflow-x: scroll;
       overflow-y: hidden;
-      scroll-snap-type: x mandatory;
       scrollbar-width: none;
     }
     .h-scroll-track::-webkit-scrollbar { display: none; }
@@ -76,7 +70,6 @@
     .h-panel {
       flex: 0 0 100vw;
       height: 100vh;
-      scroll-snap-align: start;
       overflow: hidden;
       position: relative;
     }
@@ -84,7 +77,7 @@
     .case-panel {
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
+      justify-content: center;
       width: 100%;
       height: 100%;
       background: #111 center / cover no-repeat;
@@ -97,65 +90,35 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(to right, rgba(0,0,0,0.82) 30%, rgba(0,0,0,0.28) 100%);
+      background: linear-gradient(to right, rgba(0,0,0,0.78) 30%, rgba(0,0,0,0.25) 100%);
       pointer-events: none;
       transition: opacity 0.3s;
     }
-    .case-panel:hover::after { opacity: 0.75; }
-    .case-panel .case-card-content {
-      position: relative;
-      z-index: 1;
-      max-width: 520px;
-    }
-    .case-panel:hover .case-more {
-      color: #fff;
-      border-color: rgba(255,255,255,0.6);
-    }
+    .case-panel:hover::after { opacity: 0.7; }
+    .case-panel .case-card-content { position: relative; z-index: 1; max-width: 520px; }
+    .case-panel:hover .case-more   { color: #fff; border-color: rgba(255,255,255,0.6); }
 
-    .cases-panel-label {
-      position: absolute;
-      top: calc(80px + 28px);
-      left: var(--side-padding);
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.38);
-      z-index: 2;
-      font-family: var(--font);
+    .cases-full-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      width: 100%;
+      height: 100%;
+      gap: 2px;
+      background: #050505;
     }
-
-    .small-cases-panel {
-      height: 100vh;
-      background: var(--cases-bg);
+    .case-card-full {
+      background: #111111;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      padding: 0 var(--side-padding);
-      box-sizing: border-box;
-    }
-    .small-cases-panel .section-title {
+      justify-content: flex-end;
+      padding: 40px 48px;
+      text-decoration: none;
       color: var(--cases-text);
-      padding-top: 80px;
+      transition: background 0.2s;
     }
-    .small-cases-panel .cases-small-grid {
-      max-width: none;
-      margin: 0;
-      padding: 0;
-    }
-    .small-cases-panel .case-card-small {
-      padding: 36px 40px;
-    }
-    .small-cases-panel .site-footer {
-      margin-top: auto;
-      padding: 28px 0;
-      max-width: none;
-      margin-left: 0;
-      margin-right: 0;
-      border-top: 1px solid rgba(255,255,255,0.1);
-    }
-    .small-cases-panel .site-footer a { color: rgba(255,255,255,0.38); }
-    .small-cases-panel .site-footer a:hover { color: #fff; }
+    .case-card-full:hover { background: #1a1a1a; }
+    .case-card-full:hover .case-more { color: var(--cases-text); border-color: rgba(255,255,255,0.6); }
 
     .scroll-dots {
       position: fixed;
@@ -177,34 +140,11 @@
       transition: background 0.25s, transform 0.25s;
     }
     .scroll-dot.active { background: #fff; transform: scale(1.4); }
-
-    .h-scroll-hint {
-      position: absolute;
-      right: var(--side-padding);
-      bottom: 84px;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.38);
-      z-index: 2;
-      font-family: var(--font);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      animation: hint-pulse 2s ease-in-out infinite;
-    }
-    @keyframes hint-pulse {
-      0%, 100% { opacity: 0.38; transform: translateX(0); }
-      50%       { opacity: 0.7;  transform: translateX(6px); }
-    }
-    .h-panel.interacted .h-scroll-hint { display: none; }
   </style>
 </head>
 <body>
 
-  <!-- Fixed Navigation -->
-  <header class="site-header">
+  <header class="site-header" id="siteHeader">
     <nav class="site-nav">
       <a href="cv.html">cv</a>
       <a href="#" onclick="copyEmail(event)">email</a>
@@ -217,9 +157,9 @@
   </header>
 
   <div class="scroll-dots" id="scrollDots">
-    <div class="scroll-dot active" data-idx="0"></div>
-    <div class="scroll-dot" data-idx="1"></div>
-    <div class="scroll-dot" data-idx="2"></div>
+    <div class="scroll-dot active"></div>
+    <div class="scroll-dot"></div>
+    <div class="scroll-dot"></div>
   </div>
 
   <div class="page-scroll" id="pageScroll">
@@ -286,13 +226,11 @@
     </section>
 
     <!-- Blocks 3–5: Horizontal scroll track -->
-    <div class="snap-section h-scroll-track" id="hScrollTrack">
+    <div class="h-scroll-track" id="hScrollTrack">
 
       <!-- Block 3: Megamarket -->
-      <div class="h-panel" id="panel-0">
+      <div class="h-panel">
         <a href="megamarket.html" class="case-panel" style="background-image: url('images/megamarket.png');">
-          <span class="cases-panel-label">Meine Cases</span>
-          <span class="h-scroll-hint">scrollen&nbsp;→</span>
           <div class="case-card-content">
             <p class="case-tag">Megamarket</p>
             <h3 class="case-role">Product Design Lead /<br>Principal Product Designer</h3>
@@ -303,9 +241,8 @@
       </div>
 
       <!-- Block 4: Avito -->
-      <div class="h-panel" id="panel-1">
+      <div class="h-panel">
         <a href="avito.html" class="case-panel" style="background-image: url('images/avito.png');">
-          <span class="cases-panel-label">Meine Cases</span>
           <div class="case-card-content">
             <p class="case-tag">Avito</p>
             <h3 class="case-role">Product Design Lead /<br>Principal Product Designer</h3>
@@ -315,47 +252,38 @@
         </a>
       </div>
 
-      <!-- Block 5: Small projects + footer -->
-      <div class="h-panel" id="panel-2">
-        <div class="small-cases-panel">
-          <h2 class="section-title">Meine Cases</h2>
-          <div class="cases-small-grid">
+      <!-- Block 5: 4 projects — full-screen 2×2 grid -->
+      <div class="h-panel">
+        <div class="cases-full-grid">
 
-            <a href="viju-streaming.html" class="case-card-small">
-              <p class="case-tag">VIJU</p>
-              <h3 class="case-role" style="font-size:17px;font-weight:600;color:#fff;margin-bottom:10px;line-height:1.3;">Senior Product Designer</h3>
-              <p class="case-desc">Einen neuen Streaming-Dienst von Grund auf gestalten.</p>
-              <span class="case-more">Mehr</span>
-            </a>
+          <a href="viju-streaming.html" class="case-card-full">
+            <p class="case-tag">VIJU</p>
+            <h3 class="case-role" style="font-size:17px;margin-bottom:10px;">Senior Product Designer</h3>
+            <p class="case-desc">Einen neuen Streaming-Dienst von Grund auf gestalten.</p>
+            <span class="case-more">Mehr</span>
+          </a>
 
-            <a href="viju-cms.html" class="case-card-small">
-              <p class="case-tag">VIJU</p>
-              <h3 class="case-role" style="font-size:17px;font-weight:600;color:#fff;margin-bottom:10px;line-height:1.3;">Senior Product Designer</h3>
-              <p class="case-desc">Das Content-Management-System des Streaming-Dienstes von Grund auf gestalten.</p>
-              <span class="case-more">Mehr</span>
-            </a>
+          <a href="viju-cms.html" class="case-card-full">
+            <p class="case-tag">VIJU</p>
+            <h3 class="case-role" style="font-size:17px;margin-bottom:10px;">Senior Product Designer</h3>
+            <p class="case-desc">Das Content-Management-System des Streaming-Dienstes von Grund auf gestalten.</p>
+            <span class="case-more">Mehr</span>
+          </a>
 
-            <a href="brag-house.html" class="case-card-small">
-              <p class="case-tag">Brag House</p>
-              <h3 class="case-role" style="font-size:17px;font-weight:600;color:#fff;margin-bottom:10px;line-height:1.3;">Senior Product Designer</h3>
-              <p class="case-desc">Das MVP der Esports-App gestalten, um Investitionen anzuziehen — insgesamt $6,7 Mio. wurden eingeworben.</p>
-              <span class="case-more">Mehr</span>
-            </a>
+          <a href="brag-house.html" class="case-card-full">
+            <p class="case-tag">Brag House</p>
+            <h3 class="case-role" style="font-size:17px;margin-bottom:10px;">Senior Product Designer</h3>
+            <p class="case-desc">Das MVP der Esports-App gestalten — insgesamt $6,7 Mio. wurden eingeworben.</p>
+            <span class="case-more">Mehr</span>
+          </a>
 
-            <a href="sbermarket.html" class="case-card-small">
-              <p class="case-tag">Sbermarket</p>
-              <h3 class="case-role" style="font-size:17px;font-weight:600;color:#fff;margin-bottom:10px;line-height:1.3;">Senior Product Designer</h3>
-              <p class="case-desc">Eine Team-Kommunikationsplattform für 10.000 Mitarbeiter gestalten.</p>
-              <span class="case-more">Mehr</span>
-            </a>
+          <a href="sbermarket.html" class="case-card-full">
+            <p class="case-tag">Sbermarket</p>
+            <h3 class="case-role" style="font-size:17px;margin-bottom:10px;">Senior Product Designer</h3>
+            <p class="case-desc">Eine Team-Kommunikationsplattform für 10.000 Mitarbeiter gestalten.</p>
+            <span class="case-more">Mehr</span>
+          </a>
 
-          </div>
-
-          <div class="site-footer">
-            <a href="mailto:elizabethulianova@gmail.com">elizabethulianova@gmail.com</a>
-            <a href="https://www.linkedin.com/in/lisaulianova/" target="_blank" rel="noopener">LinkedIn</a>
-            <a href="cv.html">CV</a>
-          </div>
         </div>
       </div>
 
@@ -380,43 +308,42 @@
     }
 
     (function () {
+      var header     = document.getElementById('siteHeader');
       var hTrack     = document.getElementById('hScrollTrack');
       var pageScroll = document.getElementById('pageScroll');
       var dotsWrap   = document.getElementById('scrollDots');
       var dots       = Array.from(dotsWrap.querySelectorAll('.scroll-dot'));
-      var firstPanel = document.getElementById('panel-0');
-      var PANEL_W    = window.innerWidth;
       var PANELS     = hTrack.querySelectorAll('.h-panel').length;
       var locked     = false;
-      var LOCK_MS    = 750;
+      var LOCK_MS    = 1200;
+      var MIN_DELTA  = 60;
 
-      window.addEventListener('resize', function () { PANEL_W = window.innerWidth; });
-
-      function activeIdx() { return Math.round(hTrack.scrollLeft / PANEL_W); }
+      function panelW()    { return window.innerWidth; }
+      function activeIdx() { return Math.round(hTrack.scrollLeft / panelW()); }
 
       function goTo(idx) {
-        hTrack.scrollTo({ left: idx * PANEL_W, behavior: 'smooth' });
+        hTrack.scrollTo({ left: idx * panelW(), behavior: 'smooth' });
         updateDots(idx);
-        firstPanel.classList.add('interacted');
       }
-
       function updateDots(idx) {
         dots.forEach(function (d, i) { d.classList.toggle('active', i === idx); });
       }
 
-      var observer = new IntersectionObserver(function (entries) {
+      var obs = new IntersectionObserver(function (entries) {
+        header.classList.toggle('header--dark', entries[0].isIntersecting);
         dotsWrap.classList.toggle('visible', entries[0].isIntersecting);
-      }, { root: pageScroll, threshold: 0.6 });
-      observer.observe(hTrack);
+      }, { root: pageScroll, threshold: 0.5 });
+      obs.observe(hTrack);
 
       hTrack.addEventListener('scroll', function () { updateDots(activeIdx()); });
 
       hTrack.addEventListener('wheel', function (e) {
         e.preventDefault();
         e.stopPropagation();
+        var delta = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+        if (Math.abs(delta) < MIN_DELTA) return;
         if (locked) return;
         locked = true;
-        var delta = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
         var cur = activeIdx();
         if (delta > 0) {
           if (cur < PANELS - 1) goTo(cur + 1);
@@ -449,9 +376,9 @@
         var dy = ty0 - e.changedTouches[0].clientY;
         if (Math.abs(dx) <= Math.abs(dy) || Math.abs(dx) < 40) return;
         var cur = activeIdx();
-        if (dx > 0 && cur < PANELS - 1) goTo(cur + 1);
-        else if (dx < 0 && cur > 0) goTo(cur - 1);
-        else if (dx < 0 && cur === 0) pageScroll.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
+        if (dx > 0 && cur < PANELS - 1)  goTo(cur + 1);
+        else if (dx < 0 && cur > 0)       goTo(cur - 1);
+        else if (dx < 0 && cur === 0)     pageScroll.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
       }, { passive: true });
     }());
   </script>
