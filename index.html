@@ -48,6 +48,7 @@
       max-width: none !important;
       margin: 0 !important;
       padding: 0 !important;
+      border-top: none !important;   /* remove divider between block 1 and 2 */
       scroll-snap-align: start;
       overflow: hidden;
       display: flex !important;
@@ -70,7 +71,7 @@
       display: flex;
       overflow-x: scroll;
       overflow-y: hidden;
-      /* NO CSS snap — JS handles it for better control */
+      scroll-snap-type: x mandatory; /* native CSS snap, same engine as vertical */
       scrollbar-width: none;
     }
     .h-scroll-track::-webkit-scrollbar { display: none; }
@@ -86,33 +87,44 @@
     .case-panel {
       display: flex;
       flex-direction: column;
-      justify-content: center;        /* vertically centered */
+      justify-content: center;
       width: 100%;
       height: 100%;
       background: #111 center / cover no-repeat;
       padding: 80px var(--side-padding);
       text-decoration: none;
       position: relative;
-      cursor: pointer;
+      cursor: none; /* hide default cursor — custom tooltip used */
     }
-    .case-panel::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to right, rgba(0,0,0,0.78) 30%, rgba(0,0,0,0.25) 100%);
-      pointer-events: none;
-      transition: opacity 0.3s;
-    }
-    .case-panel:hover::after { opacity: 0.7; }
     .case-panel .case-card-content {
-      position: relative;
-      z-index: 1;
       max-width: 520px;
     }
     .case-panel:hover .case-more {
       color: #fff;
       border-color: rgba(255,255,255,0.6);
     }
+
+    /* ── Cursor tooltip ──────────────────────────────────────── */
+    .cursor-tooltip {
+      position: fixed;
+      top: 0; left: 0;
+      background: rgba(0,0,0,0.72);
+      color: #fff;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: var(--font);
+      letter-spacing: 0.01em;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s;
+      z-index: 9999;
+      white-space: nowrap;
+      transform: translate(18px, 18px);
+    }
+    .cursor-tooltip.visible { opacity: 1; }
+    /* Also hide cursor on small cards */
+    .case-card-full { cursor: none; }
 
     /* ── Block 5: 2×2 full-screen grid ─────────────────────── */
     .cases-full-grid {
@@ -334,65 +346,47 @@
 
     /* ── Scroll logic ────────────────────────────────────────── */
     (function () {
-      var header    = document.getElementById('siteHeader');
-      var hTrack    = document.getElementById('hScrollTrack');
-      var pageScroll= document.getElementById('pageScroll');
-      var dotsWrap  = document.getElementById('scrollDots');
-      var dots      = Array.from(dotsWrap.querySelectorAll('.scroll-dot'));
-      var PANELS    = hTrack.querySelectorAll('.h-panel').length;
-      var locked    = false;
-      var LOCK_MS   = 1200;   /* ms between panel changes — prevents flying-through */
-      var MIN_DELTA = 60;     /* minimum wheel delta to trigger a panel change */
+      var header     = document.getElementById('siteHeader');
+      var hTrack     = document.getElementById('hScrollTrack');
+      var pageScroll = document.getElementById('pageScroll');
+      var dotsWrap   = document.getElementById('scrollDots');
+      var dots       = Array.from(dotsWrap.querySelectorAll('.scroll-dot'));
+      var PANELS     = hTrack.querySelectorAll('.h-panel').length;
 
-      function panelW()   { return window.innerWidth; }
-      function activeIdx(){ return Math.round(hTrack.scrollLeft / panelW()); }
-
-      /* Scroll h-track to panel index */
-      function goTo(idx) {
-        hTrack.scrollTo({ left: idx * panelW(), behavior: 'smooth' });
-        updateDots(idx);
-      }
+      function panelW()    { return window.innerWidth; }
+      function activeIdx() { return Math.round(hTrack.scrollLeft / panelW()); }
 
       function updateDots(idx) {
         dots.forEach(function (d, i) { d.classList.toggle('active', i === idx); });
       }
 
-      /* ── Header colour: transparent dark over case panels ── */
-      var headerObserver = new IntersectionObserver(function (entries) {
-        /* h-track visible → white nav text; otherwise dark text */
+      /* ── Header colour + dots visibility ────────────────── */
+      var obs = new IntersectionObserver(function (entries) {
         header.classList.toggle('header--dark', entries[0].isIntersecting);
-        /* Also show/hide dots */
-        dotsWrap.classList.toggle('visible', entries[0].isIntersecting);
+        dotsWrap.classList.toggle('visible',    entries[0].isIntersecting);
       }, { root: pageScroll, threshold: 0.5 });
-      headerObserver.observe(hTrack);
+      obs.observe(hTrack);
 
-      /* Keep dots in sync on native horizontal scroll (touch/trackpad) */
       hTrack.addEventListener('scroll', function () { updateDots(activeIdx()); });
 
-      /* ── Wheel → horizontal ─────────────────────────────── */
+      /* ── Wheel → horizontal (native-feel, mirrors vertical) ─
+         Pass delta directly to scrollBy + CSS snap handles the rest.
+         Identical mechanism to how page-scroll vertical snap works. */
       hTrack.addEventListener('wheel', function (e) {
         e.preventDefault();
         e.stopPropagation();
 
-        /* Require deliberate scroll to avoid accidental panel jumps */
         var delta = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
-        if (Math.abs(delta) < MIN_DELTA) return;
-        if (locked) return;
-        locked = true;
 
-        var cur = activeIdx();
-        if (delta > 0) {
-          if (cur < PANELS - 1) goTo(cur + 1);
-        } else {
-          if (cur > 0) {
-            goTo(cur - 1);
-          } else {
-            /* Back to vertical section */
-            pageScroll.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
-          }
+        /* At first panel, scrolling backward → return to vertical */
+        if (hTrack.scrollLeft <= 0 && delta < 0) {
+          pageScroll.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
+          return;
         }
 
-        setTimeout(function () { locked = false; }, LOCK_MS);
+        /* Hand delta straight to the scroll container —
+           CSS scroll-snap-type: x mandatory takes over from here */
+        hTrack.scrollBy({ left: delta, behavior: 'auto' });
       }, { passive: false });
 
       /* ── Keyboard ───────────────────────────────────────── */
@@ -401,10 +395,10 @@
         var cur = activeIdx();
         if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
           e.preventDefault();
-          if (cur < PANELS - 1) goTo(cur + 1);
+          if (cur < PANELS - 1) hTrack.scrollTo({ left: (cur + 1) * panelW(), behavior: 'smooth' });
         } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
           e.preventDefault();
-          if (cur > 0) goTo(cur - 1);
+          if (cur > 0) hTrack.scrollTo({ left: (cur - 1) * panelW(), behavior: 'smooth' });
           else pageScroll.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
         }
       });
@@ -419,11 +413,28 @@
         var dy = ty0 - e.changedTouches[0].clientY;
         if (Math.abs(dx) <= Math.abs(dy) || Math.abs(dx) < 40) return;
         var cur = activeIdx();
-        if (dx > 0 && cur < PANELS - 1)   goTo(cur + 1);
-        else if (dx < 0 && cur > 0)        goTo(cur - 1);
-        else if (dx < 0 && cur === 0)      pageScroll.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
+        if (dx > 0 && cur < PANELS - 1) hTrack.scrollTo({ left: (cur + 1) * panelW(), behavior: 'smooth' });
+        else if (dx < 0 && cur > 0)     hTrack.scrollTo({ left: (cur - 1) * panelW(), behavior: 'smooth' });
+        else if (dx < 0 && cur === 0)   pageScroll.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
       }, { passive: true });
 
+    }());
+
+    /* ── Cursor tooltip ──────────────────────────────────────── */
+    (function () {
+      var tip = document.createElement('div');
+      tip.className = 'cursor-tooltip';
+      tip.textContent = 'to the case ➡️';
+      document.body.appendChild(tip);
+
+      document.querySelectorAll('.case-panel, .case-card-full').forEach(function (el) {
+        el.addEventListener('mouseenter', function () { tip.classList.add('visible'); });
+        el.addEventListener('mouseleave', function () { tip.classList.remove('visible'); });
+        el.addEventListener('mousemove',  function (e) {
+          tip.style.left = e.clientX + 'px';
+          tip.style.top  = e.clientY + 'px';
+        });
+      });
     }());
   </script>
 </body>
